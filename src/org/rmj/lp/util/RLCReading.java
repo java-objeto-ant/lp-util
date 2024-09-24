@@ -268,7 +268,7 @@ public class RLCReading {
         for (File obj : contents){
             if (obj.isFile()){
                 try {
-                    if (sftp.Upload(lsUpload, "/50080729/", obj.getName(), false)){
+                    if (sftp.Upload(lsUpload, "/50080729/", obj.getName())){
                         if (!FileUtil.moveFile(lsUpload + obj.getName(), lsSuccess + obj.getName())){
                             message = "Unable to move file to sent directory. " + lsUpload + obj.getName();
                             return false;
