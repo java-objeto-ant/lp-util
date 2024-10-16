@@ -28,13 +28,13 @@ public class testRLCReading {
         }
         
         RLCReading read = new RLCReading(instance, "50080729");
-        if (!read.initMachine("22010313392685363")){
+        if (!read.initMachine("22010313392685364")){
             logwrapr.severe(read.getMessage());
             System.exit(1);
         }
         
-        String lsDate1 = "2023-04-27"; //always -1 day of the requested date
-        String lsDate2 = "2023-04-30";
+        String lsDate1 = "2024-07-02"; //always -1 day of the requested date
+        String lsDate2 = "2024-07-03";
         
         Date ldDate1;
         Date ldDate2;
