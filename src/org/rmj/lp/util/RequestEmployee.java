@@ -2,18 +2,15 @@ package org.rmj.lp.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import static javafx.application.Application.launch;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.MySQLAESCrypt;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.WebClient;
@@ -38,7 +35,13 @@ public class RequestEmployee {
         JSONObject param = new JSONObject();
 
         param.put("employno", System.getProperty("app.employee.id"));
+        String tempFilePath = System.getProperty("sys.default.path.config") + "/pos.tmp";
+        File tempFile = new File(tempFilePath);
 
+        // Delete existing temp file if it exists
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
         String response;
         try {
             response = WebClient.sendHTTP(sURL, param.toJSONString(), (HashMap<String, String>) headers);
@@ -53,21 +56,12 @@ public class RequestEmployee {
                 loJSON = (JSONObject) loParser.parse(loJSON.get("error").toString());
 
                 response = (String) loJSON.get("message");
-                System.err.println(response); //return value
-
+                System.out.println(response);
                 System.exit(1);
             } else {
                 response = MySQLAESCrypt.Decrypt((String) loJSON.get("payload"), "20190625");
 
-                System.out.println(response); //return value
-                String tempFilePath = System.getProperty("sys.default.path.config") + "/pos.tmp";
-                File tempFile = new File(tempFilePath);
-
-                // Delete existing temp file if it exists
-                if (tempFile.exists()) {
-                    tempFile.delete();
-                }
-
+                System.out.println(response);
                 // Write the response to the temp file with UTF-8 encoding
                 try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8)) {
                     writer.write(response);
