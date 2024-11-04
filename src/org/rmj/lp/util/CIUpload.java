@@ -28,7 +28,7 @@ public class CIUpload extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        String lsAPI = "http://192.168.10.70/LosPedritos/getChargeInvoice.php";
+        String lsAPI = "https://restgk.guanzongroup.com.ph/lospedritos/accounts/getChargeInvoice.php";
 
         Map<String, String> headers = getAPIHeader();
 
