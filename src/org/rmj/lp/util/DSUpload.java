@@ -28,8 +28,9 @@ public class DSUpload extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        String lsAPI = "http://192.168.10.70/LosPedritos/getDeliveryService.php";
-
+       
+        String lsAPI = "https://restgk.guanzongroup.com.ph/lospedritos/accounts/getDeliveryService.php";
+        
         Map<String, String> headers = getAPIHeader();
 
         try {

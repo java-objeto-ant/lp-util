@@ -31,8 +31,8 @@ public class DSARDownload extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         p_sBranchCd = oApp.getBranchCode();
-
-        String lsAPI = "http://192.168.10.70/LosPedritos/getDeliveryAR.php";
+        
+        String lsAPI = "https://restgk.guanzongroup.com.ph/lospedritos/accounts/getDeliveryAR.php";
 
         Map<String, String> headers = getAPIHeader();
 
