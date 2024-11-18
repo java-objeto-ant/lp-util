@@ -41,15 +41,19 @@ public class CIUpload extends Application {
             JSONObject jsonObject = new JSONObject();
             JSONObject chargeinvObject = new JSONObject();
             JSONArray somasterArray = new JSONArray();
+            JSONArray sodetailArray = new JSONArray();
             JSONObject somasterObject = new JSONObject();
+            JSONObject sodetailObject = new JSONObject();;
             while (loRS.next()) {
-                 //clear first
+                //clear first
                 jsonObject.clear();
                 chargeinvObject.clear();
                 somasterArray.clear();
+                sodetailArray.clear();
                 somasterObject.clear();
+                sodetailObject.clear();
                 param.clear();
-                
+
                 System.out.println(loRS.getString("sTransNox"));
                 chargeinvObject.put("sTransNox", loRS.getString("sTransNox"));
                 chargeinvObject.put("sClientID", loRS.getString("sClientID"));
@@ -81,8 +85,8 @@ public class CIUpload extends Application {
                 ciArray.add(chargeinvObject);
                 jsonObject.put("Charge_Invoice", ciArray);
 
-                String lsSQLDetail = MiscUtil.addCondition(getSQ_SaleMaster(), "sTransNox = " + SQLUtil.toSQL(loRS.getString("sSourceNo")));
-                ResultSet loRSSOMaster = oApp.executeQuery(lsSQLDetail);
+                String lsSQLMaster = MiscUtil.addCondition(getSQ_SaleMaster(), "sTransNox = " + SQLUtil.toSQL(loRS.getString("sSourceNo")));
+                ResultSet loRSSOMaster = oApp.executeQuery(lsSQLMaster);
 
                 while (loRSSOMaster.next()) {
 
@@ -90,7 +94,7 @@ public class CIUpload extends Application {
                     somasterObject.put("dTransact", loRSSOMaster.getString("dTransact"));
                     somasterObject.put("sReceiptx", loRSSOMaster.getString("sReceiptx"));
                     somasterObject.put("nContrlNo", loRSSOMaster.getObject("nContrlNo"));
-                    somasterObject.put("nTranTotl", loRSSOMaster.getBigDecimal("nTranTotl"));
+                    somasterObject.put("nTranTotl", loRSSOMaster.getDouble("nTranTotl"));
                     somasterObject.put("sCashierx", loRSSOMaster.getString("sCashierx"));
                     somasterObject.put("sTableNox", loRSSOMaster.getString("sTableNox"));
                     somasterObject.put("sWaiterID", loRSSOMaster.getString("sWaiterID"));
@@ -108,6 +112,35 @@ public class CIUpload extends Application {
                     somasterObject.put("dModified", loRSSOMaster.getString("dModified"));
 
                     somasterArray.add(somasterObject);
+
+                    String lsSQLDetail = MiscUtil.addCondition(getSQ_SaleDetail(), "sTransNox = " + SQLUtil.toSQL(loRSSOMaster.getString("sTransNox")));
+                    ResultSet loRSSODetail = oApp.executeQuery(lsSQLDetail);
+
+                    while (loRSSODetail.next()) {
+
+                        sodetailObject = new JSONObject();
+                        sodetailObject.put("sTransNox", loRSSODetail.getString("sTransNox"));
+                        sodetailObject.put("nEntryNox", loRSSODetail.getObject("nEntryNox"));
+                        sodetailObject.put("sStockIDx", loRSSODetail.getString("sStockIDx"));
+                        sodetailObject.put("cReversex", loRSSODetail.getString("cReversex"));
+                        sodetailObject.put("nQuantity", loRSSODetail.getDouble("nQuantity"));
+                        sodetailObject.put("nUnitPrce", loRSSODetail.getDouble("nUnitPrce"));
+                        sodetailObject.put("nDiscount", loRSSODetail.getDouble("nDiscount"));
+                        sodetailObject.put("nAddDiscx", loRSSODetail.getDouble("nAddDiscx"));
+                        sodetailObject.put("nComplmnt", loRSSODetail.getDouble("nComplmnt"));
+                        sodetailObject.put("cPrintedx", loRSSODetail.getString("cPrintedx"));
+                        sodetailObject.put("cServedxx", loRSSODetail.getString("cServedxx"));
+                        sodetailObject.put("cDetailxx", loRSSODetail.getString("cDetailxx"));
+                        sodetailObject.put("sReplItem", loRSSODetail.getString("sReplItem"));
+                        sodetailObject.put("cReversed", loRSSODetail.getString("cReversed"));
+                        sodetailObject.put("cComboMlx", loRSSODetail.getString("cComboMlx"));
+                        sodetailObject.put("cWthPromo", loRSSODetail.getString("cWthPromo"));
+                        sodetailObject.put("dModified", loRSSODetail.getString("dModified"));
+
+                        sodetailArray.add(sodetailObject);
+                    }
+
+                    jsonObject.put("SO_Detail", sodetailArray);
                 }
                 jsonObject.put("SO_Master", somasterArray);
 
@@ -265,5 +298,31 @@ public class CIUpload extends Application {
                 + " FROM SO_Master ";
 
         return lsSQL;
+    }
+
+    private String getSQ_SaleDetail() {
+        String lsSQL;
+        lsSQL = " SELECT "
+                + " sTransNox "
+                + " , nEntryNox "
+                + " , sStockIDx "
+                + " , cReversex "
+                + " , nQuantity "
+                + " , nUnitPrce "
+                + " , nDiscount "
+                + " , nAddDiscx "
+                + " , nComplmnt "
+                + " , cPrintedx "
+                + " , cServedxx "
+                + " , cDetailxx "
+                + " , sReplItem "
+                + " , cReversed "
+                + " , cComboMlx "
+                + " , cWthPromo "
+                + " , dModified "
+                + " FROM SO_Detail ";
+
+        return lsSQL;
+
     }
 }
