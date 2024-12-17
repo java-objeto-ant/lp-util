@@ -14,7 +14,7 @@ public class ChargeInvoiceToAdvances {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             path = "D:/GGC_Java_Systems";
         } else {
-            path = "/srv/GGC_Java_Systems";
+            path = "/srv/mac/GGC_Java_Systems";
         }
 
         System.setProperty("sys.default.path.config", path);

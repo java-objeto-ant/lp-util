@@ -5,6 +5,8 @@
         <group/>
         <group name="Utillities"/>
         <group name="LP IntegSys"/>
-        <group name="Utilities"/>
+        <group name="Utilities">
+            <file>file:/D:/Guanzon/GMC%20SEG%20Folder%20-%20Java/lp-util/src/org/rmj/lp/util/ChargeInvoiceToAdvances.java</file>
+        </group>
     </open-files>
 </project-private>
