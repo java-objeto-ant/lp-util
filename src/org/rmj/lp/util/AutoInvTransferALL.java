@@ -77,10 +77,10 @@ public class AutoInvTransferALL {
             return false;
         }
 
-        if (!poInvTransfer.closeTransaction((String) poInvTransfer.getMaster("sTransNox"))) {
-            return false;
-
-        }
+//        if (!poInvTransfer.closeTransaction((String) poInvTransfer.getMaster("sTransNox"))) {
+//            return false;
+//
+//        }
         instance.commitTrans();
         return true;
     }
@@ -104,6 +104,11 @@ public class AutoInvTransferALL {
         instance = new GRider("gRider");
 
         poInvTransfer = new InvTransfer(instance, instance.getBranchCode(), true);
+        
+        if (!"P0W1»P0W2".contains(instance.getBranchCode())) {
+            System.err.println("Invalid Branch Code.");
+            System.exit(1);
+        }
 
         try {
             if (processInventory()) {
