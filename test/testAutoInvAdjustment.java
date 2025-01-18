@@ -135,25 +135,36 @@ public class testAutoInvAdjustment {
                                     }
 
                                     if (loValue != null || loValue == "") {
-                                        if (!loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "sBarCodex").equals(loValue)) {
-                                            //skip the current row
+                                        // Skip the last index
+                                        if (lnCtr == loAutoInvAdjustment.getInvAdjustment().ItemCount() - 1) {
+                                            break; // Exit the loop for the last index
+                                        }
 
-                                            continue;
+                                        Object detailValue = loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "sBarCodex");
+                                        if (detailValue != null && !detailValue.equals(loValue)) {
+                                            continue; // Skip mismatched rows
                                         }
                                         if (lnValue > 0) {
+                                            //this validation depndent on stock available 
                                             if (!loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "nCredtQty").equals(lnValue)) {
-                                                Assert.fail("Invalid Excel Amount to Setted Data!");
-
+                                                Assert.fail("Invalid Excel Amount to Setted Data!"
+                                                        + loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "sBarCodex")
+                                                        + ",Value of Excel = " + loValue
+                                                        + ", Setted Value of  = " + loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "nCredtQty"));
                                             }
                                         } else {
                                             // Ensure the value is positive for Debit Quantity
                                             lnValue = Math.abs(lnValue);
                                             if (!loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "nDebitQty").equals(lnValue)) {
-                                                Assert.fail("Invalid Excel Amount to Setted Data!");
+                                                Assert.fail("Invalid Excel Amount to Setted Data!"
+                                                        + loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "sBarCodex")
+                                                        + ",Value of Excel = " + loValue
+                                                        + ", Setted Value of  = " + loAutoInvAdjustment.getInvAdjustment().getDetail(lnCtr, "nDebitQty"));
 
                                             }
                                         }
 
+                                        lnCtr++;
 //                                        //-2 because it has autoadd
 //                                        loCredit = poInvAdjustment.getDetail(poInvAdjustment.ItemCount() - 2, "nCredtQty").toString();
 //                                        loDebit = poInvAdjustment.getDetail(poInvAdjustment.ItemCount() - 2, "nDebitQty").toString();
@@ -164,7 +175,6 @@ public class testAutoInvAdjustment {
                                 }
                             }
                         }
-                        lnCtr++;
                     }
                 }
 
