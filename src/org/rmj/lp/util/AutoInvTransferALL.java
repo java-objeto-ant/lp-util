@@ -1,6 +1,5 @@
 package org.rmj.lp.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,18 +8,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import org.apache.poi.ss.usermodel.Cell;
-import static org.apache.poi.ss.usermodel.CellType.STRING;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.MiscUtil;
 import org.rmj.appdriver.SQLUtil;
@@ -101,7 +88,7 @@ public class AutoInvTransferALL {
         } else {
             System.out.println("Config file loaded successfully.");
         }
-        instance = new GRider("gRider");
+        instance = new GRider("General");
 
         poInvTransfer = new InvTransfer(instance, instance.getBranchCode(), true);
         
