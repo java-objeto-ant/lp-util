@@ -60,10 +60,10 @@ public class FixBeginningInventoryDate {
                         long lnDiff = CommonUtils.dateDiff(loRS.getDate("dBegInvxx"), loRS1.getDate("dTransact"));
                         System.out.println(lnDiff);
 
-                        if (lnDiff > 0) {
+                        if (lnDiff >= 0) {
                             lsSQL = "UPDATE Inv_Master SET" +
-                                        "  dAcquired  = " + SQLUtil.toSQL(loRS1.getDate("dTransact")) +
-                                        ", dBegInvxx  = " + SQLUtil.toSQL(loRS1.getDate("dTransact")) +
+                                        "  dAcquired  = " + SQLUtil.toSQL(CommonUtils.dateAdd(loRS1.getDate("dTransact"), -1)) +
+                                        ", dBegInvxx  = " + SQLUtil.toSQL(CommonUtils.dateAdd(loRS1.getDate("dTransact"), -1)) +
                                     " WHERE sStockIDx = " + SQLUtil.toSQL(loRS.getString("sStockIDx")) +
                                     " AND sBranchCd = " + SQLUtil.toSQL(oApp.getBranchCode());
 
