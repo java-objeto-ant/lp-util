@@ -49,7 +49,8 @@ public class AutoCancelPO {
                 while (loRS.next()) {
                     String sTransNox = loRS.getString("sTransNox");
                     lsSQL = "UPDATE CASys_DBF_LP." + MASTER_TABLE
-                            + " set cTranStat = 3"
+                            + " set cTranStat = 5 ,"
+                            + " sRemarksx = CONCAT(IFNULL(sRemarksx, ''), ' NOT USED')"
                             + " WHERE sTransNox =" + SQLUtil.toSQL(sTransNox);
 
                     if (instance.executeQuery(lsSQL, "", "", "") <= 0) {
@@ -81,7 +82,9 @@ public class AutoCancelPO {
                 + ", cTranStat"
                 + " FROM CASys_DBF_LP." + MASTER_TABLE
                 + " WHERE dTransact <= DATE_SUB(CURDATE(), INTERVAL " + pnCancelDays + " DAY) "
-                + " AND cTranStat <> " + SQLUtil.toSQL(TransactionStatus.STATE_CANCELLED)
+                + " AND cTranStat NOT IN ( " + SQLUtil.toSQL(TransactionStatus.STATE_CANCELLED)
+                + ", " + SQLUtil.toSQL(TransactionStatus.STATE_POSTED)
+                + ", " + SQLUtil.toSQL("5") + ")"
                 + " AND sTransNox NOT IN (SELECT sOrderNox FROM PO_Receiving_Detail)"
                 + " ORDER BY dTransact DESC";
 
