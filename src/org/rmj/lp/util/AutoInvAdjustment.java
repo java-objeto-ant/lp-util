@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -106,9 +107,10 @@ public class AutoInvAdjustment extends Application {
 
                 for (Row lnRow : loWBSheet) {
 
-                    Cell loIndexCell01 = lnRow.getCell(1);
+                    Cell loIndexCell01 = lnRow.getCell(0);
+                   
                     //update kung alin tlga ung kkunin haha
-                    Cell loIndexCell02 = lnRow.getCell(9);
+                    Cell loIndexCell02 = lnRow.getCell(12);
 
                     if (loIndexCell02 != null) {
                         switch (loIndexCell02.getCellType()) {
@@ -147,7 +149,7 @@ public class AutoInvAdjustment extends Application {
                                             loValue = loIndexCell01.getStringCellValue();
                                             break;
                                         default:
-                                            loValue = "";
+                                            loValue = String.format("%.0f", loIndexCell01.getNumericCellValue());
                                     }
 
                                     if (loValue != null || loValue == "") {
@@ -213,9 +215,9 @@ public class AutoInvAdjustment extends Application {
         } else {
             System.out.println("Config file loaded successfully.");
         }
-        instance = new GRider("gRider");
+        instance = new GRider("General");
 
-        if (!instance.logUser("gRider", "M001111122")) {
+        if (!instance.logUser("General", "M001111122")) {
             logwrapr.severe(instance.getMessage() + instance.getErrMsg());
             System.exit(1);
         }
