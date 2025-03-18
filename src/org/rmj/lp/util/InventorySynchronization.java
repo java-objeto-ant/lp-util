@@ -239,7 +239,7 @@ public class InventorySynchronization extends Application {
                         } else {
 
                             //check if inventory already has the new StockID inserted // case second run
-                            lsSQL = "SELECT * "
+                            lsSQL = "SELECT sStockIDx "
                                     + " FROM Inventory "
                                     + " WHERE sStockIDx = " + SQLUtil.toSQL(lsNewStockID);
                             ResultSet loRSNewInventory = instance.executeQuery(lsSQL);
@@ -250,16 +250,19 @@ public class InventorySynchronization extends Application {
                             while (loRS.next()) {
 
                                 String lsOldStockID = loRS.getString("sStockIDx");
-                                if (!loRS.getString("sBarcodex").equals(lsOldBarcode) && MiscUtil.RecordCount(loRSNewInventory) > 1) {
-                                    lsSQL = "UPDATE Inventory SET "
-                                            + " cRecdStat = " + SQLUtil.toSQL(RecordStatus.INACTIVE)
-                                            + " WHERE sStockIDx = " + SQLUtil.toSQL(lsOldStockID);
+                                if (loRSNewInventory.next()) {
+                                    loRSNewInventory.first();
+                                    if (!loRSNewInventory.getString("sStockIDx").equals(lsNewStockID) && MiscUtil.RecordCount(loRSNewInventory) > 1) {
+                                        lsSQL = "UPDATE Inventory SET "
+                                                + " cRecdStat = " + SQLUtil.toSQL(RecordStatus.INACTIVE)
+                                                + " WHERE sStockIDx = " + SQLUtil.toSQL(lsOldStockID);
 
-                                    if (instance.executeQuery(lsSQL, "Inventory", instance.getBranchCode(), "") <= 0) {
-                                        System.err.println(instance.getErrMsg() + "Inventory");
+                                        if (instance.executeQuery(lsSQL, "Inventory", instance.getBranchCode(), "") <= 0) {
+                                            System.err.println(instance.getErrMsg() + "Inventory");
+                                        }
+
+                                        continue;
                                     }
-
-                                    continue;
                                 }
                             }
                             //update the first record & affecting tables first record has most Detail
@@ -414,9 +417,10 @@ public class InventorySynchronization extends Application {
                                 }
 
                             } else {
-                                //check the barcode possible duplicate description
-                                if (!loRS.getString("sBarcodex").equals(lsOldBarcode)) {
-                                    loRSNewInventory.next();
+                                //check the StockIDx possible duplicate description
+
+                                loRSNewInventory.first();
+                                if (!loRSNewInventory.getString("sStockIDx").equals(lsNewStockID)) {
                                     System.out.println("Duplicate record found. StockID =" + lsNewStockID);
                                     //updating if has duplicate NewStockID,Copy converted to New Stock ID  of other field of Dummy Data and  disable dummy
 
