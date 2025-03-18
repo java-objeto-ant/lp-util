@@ -420,7 +420,7 @@ public class InventorySynchronization extends Application {
                                 //check the StockIDx possible duplicate description
 
                                 loRSNewInventory.first();
-                                if (!loRSNewInventory.getString("sStockIDx").equals(lsNewStockID)) {
+                                if (loRSNewInventory.getString("sStockIDx").equals(lsNewStockID)) {
                                     System.out.println("Duplicate record found. StockID =" + lsNewStockID);
                                     //updating if has duplicate NewStockID,Copy converted to New Stock ID  of other field of Dummy Data and  disable dummy
 
