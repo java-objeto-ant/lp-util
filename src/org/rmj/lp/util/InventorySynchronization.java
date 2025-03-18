@@ -252,7 +252,7 @@ public class InventorySynchronization extends Application {
                                 String lsOldStockID = loRS.getString("sStockIDx");
                                 if (loRSNewInventory.next()) {
                                     loRSNewInventory.first();
-                                    if (!loRSNewInventory.getString("sStockIDx").equals(lsNewStockID) && MiscUtil.RecordCount(loRSNewInventory) > 1) {
+                                    if (loRSNewInventory.getString("sStockIDx").equals(lsNewStockID) && MiscUtil.RecordCount(loRSNewInventory) > 1) {
                                         lsSQL = "UPDATE Inventory SET "
                                                 + " cRecdStat = " + SQLUtil.toSQL(RecordStatus.INACTIVE)
                                                 + " WHERE sStockIDx = " + SQLUtil.toSQL(lsOldStockID);
