@@ -106,8 +106,9 @@ public class InventorySynchronization extends Application {
                 System.out.println(laExcelData.size());
                 if (laExcelData.size() > 0) {
 
-                    instance.beginTrans();
                     for (int lnCtr = 1; lnCtr < laExcelData.size(); lnCtr++) {
+
+                        instance.beginTrans();
 
                         String lsOldBarcode = laExcelData.get(lnCtr).get(0).toString();
 
@@ -117,12 +118,25 @@ public class InventorySynchronization extends Application {
                         }
                         String lsOldDescription = laExcelData.get(lnCtr).get(1).toString();
                         String lsNewStockID = laExcelData.get(lnCtr).get(2).toString();
+
                         String lsNewBarcode = laExcelData.get(lnCtr).get(3).toString();
                         String lsNewDescription = laExcelData.get(lnCtr).get(4).toString();
                         String lsBriefDsc = lsNewDescription.length() >= 14
                                 ? lsNewDescription.substring(0, 14)
                                 : lsNewDescription; // Use the full string if it's shorter
 
+                        if (lsNewStockID == null || lsNewStockID.isEmpty()) {
+                            System.out.println(lsOldBarcode + " Empty New StockID");
+                            continue;
+                        }
+                        if (lsNewBarcode == null || lsNewBarcode.isEmpty()) {
+                            System.out.println(lsOldBarcode + " Empty New Barcode");
+                            continue;
+                        }
+                        if (lsNewDescription == null || lsNewDescription.isEmpty()) {
+                            System.out.println(lsOldBarcode + " Empty New Description");
+                            continue;
+                        }
                         String lsCategory = laExcelData.get(lnCtr).get(5).toString();
                         if (lsCategory.length() == 3) {
                             lsCategory = "0" + lsCategory;
@@ -196,7 +210,7 @@ public class InventorySynchronization extends Application {
                                 + " ORDER BY i.sDescript, COUNT(sod.sStockIDx)";
 
                         ResultSet loRS = instance.executeQuery(lsSQL);
-                        System.out.println(lsSQL);
+//                        System.out.println(lsSQL);
 
                         if (MiscUtil.RecordCount(loRS) <= 0) {
                             System.out.println("No record found. " + lsOldDescription);
@@ -465,10 +479,10 @@ public class InventorySynchronization extends Application {
                             loRSNewInventory.close();
                         }
 
+                        instance.commitTrans();
                     }
                 }
 
-                instance.commitTrans();
             } catch (IOException | SQLException e) {
                 Logger.getLogger(InventorySynchronization.class.getName()).log(Level.SEVERE, null, e);
                 return false;
