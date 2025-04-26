@@ -12,7 +12,6 @@ import javafx.application.Application;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -22,6 +21,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.SQLUtil;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.cas.inventory.base.InvAdjustment;
 import org.rmj.lib.net.LogWrapper;
 
@@ -98,7 +99,7 @@ public class AutoInvAdjustment extends Application {
 
             //Set Detail
             try (FileInputStream fis = new FileInputStream(fsFile); Workbook workbook = new XSSFWorkbook(fis)) {
-                Sheet loWBSheet = workbook.getSheetAt(0);
+                Sheet loWBSheet = workbook.getSheetAt(1);
                 Object loValue;
                 FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
                 String loCredit;
@@ -109,8 +110,8 @@ public class AutoInvAdjustment extends Application {
 
                     Cell loIndexCell01 = lnRow.getCell(0);
                    
-                    //update kung alin tlga ung kkunin haha
-                    Cell loIndexCell02 = lnRow.getCell(12);
+                    //update kung alin tlga ung kkuning amount
+                    Cell loIndexCell02 = lnRow.getCell(5);
 
                     if (loIndexCell02 != null) {
                         switch (loIndexCell02.getCellType()) {
@@ -191,7 +192,9 @@ public class AutoInvAdjustment extends Application {
     }
 
     public boolean saveTransaction() {
+        poInvAdjustment.setMaster("dTransact", CommonUtils.toDate("2025-03-31"));
         instance.beginTrans();
+        
         if (!poInvAdjustment.saveTransaction()) {
             return false;
         }
