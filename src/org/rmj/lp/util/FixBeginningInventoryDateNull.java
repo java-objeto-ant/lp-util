@@ -8,7 +8,7 @@ import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import static org.rmj.lp.util.DSUpload.oApp;
 
-public class FixBeginningInventoryDate {
+public class FixBeginningInventoryDateNull {
     public static void main(String[] args) {
         String path;
 
@@ -30,10 +30,11 @@ public class FixBeginningInventoryDate {
             System.exit(1);
         }
         
-        String lsSQL = "SELECT sStockIDx, dBegInvxx" +
+        String lsSQL = "SELECT sStockIDx, dBegInvxx, nBegQtyxx" +
                         " FROM Inv_Master" +
                         " WHERE sBranchCd = " + SQLUtil.toSQL(oApp.getBranchCode()) +
-                            " AND dBegInvxx > '2024-05-31'";
+                            " AND sStockIDxx <> ''" +
+                            " AND dBegInvxx IS NULL";
         
         ResultSet loRS = oApp.executeQuery(lsSQL);
         
@@ -47,6 +48,14 @@ public class FixBeginningInventoryDate {
             
             ResultSet loRS1;
             while (loRS.next()){
+                //check if it has a ledger on or after 2024-05-31
+                lsSQL = "SELECT sSourceCd, dTransact FROM Inv_Ledger" +
+                        " WHERE sStockIDx = " + SQLUtil.toSQL(loRS.getString("sStockIDx")) +
+                            " AND sBranchCd = " + SQLUtil.toSQL(oApp.getBranchCode()) +
+                        " ORDER BY dTransact, nLedgerNo LIMIT 1";
+                
+                
+                
                 lsSQL = "SELECT sSourceCd, dTransact FROM Inv_Ledger" +
                         " WHERE sStockIDx = " + SQLUtil.toSQL(loRS.getString("sStockIDx")) +
                             " AND sBranchCd = " + SQLUtil.toSQL(oApp.getBranchCode()) +

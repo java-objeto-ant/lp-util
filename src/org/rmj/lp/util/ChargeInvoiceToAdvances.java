@@ -51,7 +51,7 @@ public class ChargeInvoiceToAdvances {
                         " WHERE a.sSourceNo = b.sTransNox" +
                             " AND a.cBilledxx = '0'" +
                             " AND b.cTranStat <> '3'" +
-                            " AND b.dTransact BETWEEN '2025-01-16' AND '2025-01-31'" +
+                            " AND b.dTransact BETWEEN '2025-03-16' AND '2025-03-31'" +
                         " ORDER BY sChargeNo";
         
         ResultSet loRS = oApp.executeQuery(lsSQL);
@@ -76,7 +76,7 @@ public class ChargeInvoiceToAdvances {
                         ", sEntryByx = " + SQLUtil.toSQL(oApp.getUserID()) +
                         ", dEntryDte = " + SQLUtil.toSQL(oApp.getServerDate()) +
                         ", sApproved = " + SQLUtil.toSQL(oApp.getUserID()) +
-                        ", dApproved = " + SQLUtil.toSQL("2025-01-31") +
+                        ", dApproved = " + SQLUtil.toSQL("2025-03-31") +
                         ", cTranStat = '2'" + 
                         ", sModified = " + SQLUtil.toSQL(oApp.getUserID()) +
                         ", dModified = " + SQLUtil.toSQL(oApp.getServerDate());
