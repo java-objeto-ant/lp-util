@@ -39,7 +39,7 @@ public class AutoPostTransfers {
         try {
             String lsSQL = "SELECT * FROM Inv_Transfer_Master" +
                             " WHERE sDestinat = " + SQLUtil.toSQL(oApp.getBranchCode()) +
-                                " AND cTranStat NOT IN ('2', '3')" +
+                                " AND cTranStat NOT IN ('2', '3', '4')" +
                             " ORDER BY dTransact, sTransNox";
         
             ResultSet loRS = oApp.executeQuery(lsSQL);
@@ -61,6 +61,12 @@ public class AutoPostTransfers {
                         System.err.println("Unable to post " + loTrans.getMaster("sTransNox") + ".");
                         System.err.println(loTrans.getMessage() + "; " + loTrans.getErrMsg());
                         System.exit(1);
+                    }
+                } else {
+                    System.out.println("Unable to open transaction: " + loRS.getString("sTransNox"));
+                    lsSQL = "UPDATE Inv_Transfer_Master SET cTranStat = '4' WHERE sTransNox = " + SQLUtil.toSQL(loRS.getString("sTransNox"));
+                    if (oApp.executeQuery(lsSQL, "Inv_Transfer_Master", oApp.getBranchCode(), "") <= 0){
+                        System.out.println("Unable to void transaction: " + loRS.getString("sTransNox"));
                     }
                 }
             }
