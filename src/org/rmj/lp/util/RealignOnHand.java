@@ -41,7 +41,7 @@ public class RealignOnHand {
         try {
             String lsSQL = "SELECT * FROM Inv_Ledger" +
                             " WHERE sBranchCd = " + SQLUtil.toSQL(oApp.getBranchCode()) +
-                                " AND dTransact >= '2025-05-03'" +
+                                " AND dTransact = " + SQLUtil.toSQL(SQLUtil.dateFormat(oApp.getServerDate(), SQLUtil.FORMAT_SHORT_DATE)) +
                                 " AND nLedgerNo = 1";
             
             ResultSet loRS = oApp.executeQuery(lsSQL);
@@ -64,7 +64,7 @@ public class RealignOnHand {
     private static boolean loadProperties() {
         try {
             Properties po_props = new Properties();
-            po_props.load(new FileInputStream("D:\\GGC_Java_Systems\\config\\rmj.properties"));
+            po_props.load(new FileInputStream("/srv/mac/GGC_Java_Systems/config/rmj.properties"));
 
             System.setProperty("app.debug.mode", po_props.getProperty("app.debug.mode"));
             System.setProperty("user.id", po_props.getProperty("user.id"));
