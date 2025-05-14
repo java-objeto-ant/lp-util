@@ -120,13 +120,14 @@ public class POSBOMInventory {
                     //inventory master checking
                     String lsStockID = loRSSales.getString("sStockIDx");
                     double lnSalesQty = loRSSales.getDouble("nQuantity");
-                    boolean lbisWithBOMx = loRSSales.getString("sStockIDx").equals("1");
+                    boolean lbisWithBOMx = loRSSales.getString("cWithBOMx").equals("1");
 
                     if (lbisWithBOMx) {
-                        lsSQL = "SELECT sStockIDx, nEntryNox, nQuantity"
-                                + " FROM Inventory_Sub_Unit"
-                                + " WHERE sStockIDX = " + SQLUtil.toSQL(lsStockID)
-                                + " ORDER BY nEntryNox";
+                        lsSQL = "SELECT a.sStockIDx, a.nEntryNox, a.nQuantity,a.sItmSubID,b.sBarCodex"
+                                + " FROM Inventory_Sub_Unit a"
+                                + " LEFT JOIN Inventory b ON a.sItmSubID = b.sStockIDx"
+                                + " WHERE a.sStockIDX = " + SQLUtil.toSQL(lsStockID)
+                                + " ORDER BY a.nEntryNox";
                         loRSBOM = instance.executeQuery(lsSQL);
 
                         if (MiscUtil.RecordCount(loRSBOM) <= 0) {
@@ -136,7 +137,7 @@ public class POSBOMInventory {
                             loRSBOM.beforeFirst();
                             while (loRSBOM.next()) {
                                 double lnSubQty = loRSBOM.getDouble("nQuantity");
-                                String lsSubStockID = loRSBOM.getString("sStockIDx");
+                                String lsSubStockID = loRSBOM.getString("sBarCodex");
                                 if (!poInvAdjustment.setUtilityDetail(poInvAdjustment.ItemCount() - 1,
                                         lsSubStockID, true)) {
                                     //skip the current row
@@ -186,11 +187,12 @@ public class POSBOMInventory {
                     }
                 }
                 if (poInvAdjustment.ItemCount() > 0) {
-                    poInvAdjustment.saveTransaction();
-                    loBOMAdjTrans = poInvAdjustment.getMaster("sTransNox").toString();
-                    if (poInvAdjustment.openTransaction(loBOMAdjTrans)) {
-                        poInvAdjustment.closeTransaction(loBOMAdjTrans);
-                        System.out.println("BOM Utility has Adjustment with Transaction No. =" + loBOMAdjTrans);
+                    if (poInvAdjustment.saveTransaction()) {
+                        loBOMAdjTrans = poInvAdjustment.getMaster("sTransNox").toString();
+                        if (poInvAdjustment.openTransaction(loBOMAdjTrans)) {
+                            poInvAdjustment.closeTransaction(loBOMAdjTrans);
+                            System.out.println("BOM Utility has Adjustment with Transaction No. =" + loBOMAdjTrans);
+                        }
                     }
                 }
                 if (!loInvTrans.Sales(loTransaction, CommonUtils.toDate(loDateTransaction), EditMode.ADDNEW)) {
@@ -211,6 +213,7 @@ public class POSBOMInventory {
 
                 instance.commitTrans();
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(POSBOMInventory.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -262,7 +265,7 @@ public class POSBOMInventory {
 
     private static String getSQ_Sales() {
         String lsSQL = "SELECT"
-                + ", a.sTransNox"
+                + " a.sTransNox"
                 + ", a.dTransact"
                 + ", b.sStockIDx"
                 + ", b.nUnitPrce"
@@ -285,7 +288,7 @@ public class POSBOMInventory {
     private static String getSQ_Master() {
         String lsSQL = "SELECT"
                 + " b.sBranchCd"
-                + " b.sBranchNm"
+                + ", b.sBranchNm"
                 + ", a.sTransNox"
                 + ", a.dTransact"
                 + " FROM SO_Master a"
