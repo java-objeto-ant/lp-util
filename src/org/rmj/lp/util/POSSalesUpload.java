@@ -92,7 +92,7 @@ public class POSSalesUpload extends Application {
                 somasterObject.put("cSChargex", loRSSOMaster.getObject("cSChargex"));
                 somasterObject.put("cTranType", loRSSOMaster.getObject("cTranType"));
                 somasterObject.put("cCaptured", loRSSOMaster.getObject("cCaptured"));
-                somasterObject.put("dCaptured", loRSSOMaster.getObject("dCaptured"));
+                somasterObject.put("dCaptured", loRSSOMaster.getString("dCaptured"));
                 somasterObject.put("sCustName", loRSSOMaster.getString("sCustName"));
                 somasterObject.put("sModified", loRSSOMaster.getString("sModified"));
                 somasterObject.put("dModified", loRSSOMaster.getString("dModified"));
