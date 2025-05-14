@@ -198,6 +198,17 @@ public class POSBOMInventory {
                     System.err.println(loInvTrans.getErrMsg());
                     return false;
                 }
+                
+                lsSQL = "UPDATE SO_Master SET"
+                                + "  cCaptured = " + SQLUtil.toSQL(Logical.YES)
+                                + ",  dCaptured = " + SQLUtil.toSQL(instance.getServerDate())
+                                + " WHERE sTransNox = " + SQLUtil.toSQL(loTransaction);
+                        if (instance.executeQuery(lsSQL, "SO_Master", loBranch, "") <= 0) {
+                            instance.rollbackTrans();
+                            System.err.println("Unable to execute statement: " + lsSQL);
+                            System.exit(1);
+                        }
+
 
                 instance.commitTrans();
             }
