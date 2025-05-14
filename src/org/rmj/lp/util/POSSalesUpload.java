@@ -42,7 +42,15 @@ public class POSSalesUpload extends Application {
 
         try {
             JSONObject param = new JSONObject();
-            lsSQL = MiscUtil.addCondition(getSQ_SaleMaster(), " cCaptured = " + Logical.NO);
+            String dPOSCptrd = oApp.Config(oApp.getBranchCode(), "dPOSCptrd");
+
+            if (dPOSCptrd == null || dPOSCptrd.trim().isEmpty()) {
+                dPOSCptrd = "CURDATE()";
+            } else {
+                dPOSCptrd = SQLUtil.toSQL(dPOSCptrd);
+            }
+            lsSQL = MiscUtil.addCondition(getSQ_SaleMaster(), " cCaptured = " + Logical.NO
+                    + " AND dTransact >= " + dPOSCptrd);
             System.out.println(lsSQL);
             ResultSet loRSSOMaster = oApp.executeQuery(lsSQL);
 
@@ -153,8 +161,10 @@ public class POSSalesUpload extends Application {
             System.exit(0);
         } catch (SQLException e) {
             e.printStackTrace();
+            System.exit(1);
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
     }
