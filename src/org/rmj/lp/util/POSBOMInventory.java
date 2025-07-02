@@ -98,6 +98,7 @@ public class POSBOMInventory {
                 /*---------------------------------------------------------------------------------
                  *   Initialize required classes
                  *---------------------------------------------------------------------------------*/
+                instance.beginTrans();
                 InventoryTrans loInvTrans = new InventoryTrans(instance, loBranch);
                 loInvTrans.InitTransaction();
                 poInvAdjustment = new InvAdjustment(instance, loBranch, true);
@@ -113,7 +114,7 @@ public class POSBOMInventory {
                 poInvAdjustment.setMaster("sSourceNo", loTransaction);
                 poInvAdjustment.setMaster("sSourceCd", InvConstants.SALES);
 
-                instance.beginTrans();
+                
                 loRSSales.beforeFirst();
                 loBOMAdjTrans = "";
                 while (loRSSales.next()) {

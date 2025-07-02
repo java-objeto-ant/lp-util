@@ -33,8 +33,8 @@ public class POSSalesUpload extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         String lsSQL = "";
-//        String lsAPI = "https://restgk.guanzongroup.com.ph/lospedritos/accounts/getSalesPOS.php";
-        String lsAPI = "http://localhost/lospedritos/accounts/getSalesPOS.php";
+//        String lsAPI = "https://restgk.guanzongroup.com.ph/lospedritos/sales/getSalesPOS.php";
+        String lsAPI = "http://192.165.10.145/lospedritos/sales/getSalesPOS.php";
 
         Map<String, String> headers = getAPIHeader();
 
