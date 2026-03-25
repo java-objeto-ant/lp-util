@@ -19,5 +19,8 @@ public class testSFTP {
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }
+
+
+////sftp.setHostKey("ssh-ed25519 255 e6vFs7ULtSiKo3GfwWlkuz792QGW2YeyWn/83Vsq38A=");
     }
 }
